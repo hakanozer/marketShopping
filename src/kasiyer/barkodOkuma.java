@@ -37,7 +37,13 @@ public class barkodOkuma extends javax.swing.JFrame {
         jTable1.setModel(dt);
     }
 
-   
+    public void temizle() {
+        if (jTable1.getRowCount() > 0) {
+            dt.getDataVector().removeAllElements();
+            jTable1.setModel(dt);
+        }
+
+    }
     
     public void fncBtnAra() {
         boolean durum = false;
@@ -97,7 +103,15 @@ public class barkodOkuma extends javax.swing.JFrame {
         
     }
     
+     public void fncButton2(){
+     int secim = JOptionPane.showConfirmDialog(rootPane,"Emin misiniz?","Satış Sayfasına Dön", JOptionPane.YES_NO_OPTION);
+        if (secim == 0) {
+            anaForm af = new anaForm();
+            af.setVisible(true);
+            this.setVisible(false);
+        }
      
+     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -143,6 +157,11 @@ public class barkodOkuma extends javax.swing.JFrame {
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/1457748004_back.png"))); // NOI18N
         jButton2.setBorder(null);
         jButton2.setContentAreaFilled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -225,6 +244,10 @@ public class barkodOkuma extends javax.swing.JFrame {
             jButton2ActionPerformed(null);
         }
     }//GEN-LAST:event_txtAraKeyPressed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        fncButton2();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public static void main(String args[]) {
 

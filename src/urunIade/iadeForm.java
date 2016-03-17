@@ -290,6 +290,79 @@ public class iadeForm extends javax.swing.JFrame {
         }
     }
 
+    public void bilgiGetir() {
+        try {
+            DB db = new DB();
+
+            ResultSet rs = db.dataGetir("admin left join satis on admin.id = satis.kasiyerID where satisID = '" + txtFatura.getText().trim() + "'");
+            if (rs.next()) {
+                lblAdi.setText(rs.getString("adi"));
+                lblSoyadi.setText(rs.getString("soyadi"));
+                lblKullanıcı.setText(rs.getString("kulAdi"));
+            }else{
+                JOptionPane.showMessageDialog(this, "Bu Ürün Sistemde Bulunmamaktadır");
+            }
+            db.kapat();
+        } catch (SQLException | HeadlessException e) {
+            System.out.println("getirme hatası : " + e);
+        }
+    }
+    double fiyat = 0;
+    double tfiyat = 0;
+    double ofiyat = 0;
+
+    public void iade() { //txtFatura= satisID  txtBarkod = barkodNo
+        try {
+            DB db = new DB();
+            ResultSet rs = db.dataGetir("satis where satisID = '" + txtFatura.getText().trim() + "'  ");
+            tfiyat = Double.valueOf(rs.getString("toplamFiyat"));
+            ofiyat = Double.valueOf(rs.getString("odenenFiyat"));
+            System.out.println("tfiyat-ofiyat : " + tfiyat + ofiyat);
+            try {
+                 ResultSet rss = db.dataGetir("urunler where barkodNo = '" + txtBarkod.getText().trim() + "'  ");
+                 fiyat = Double.valueOf(rss.getString("fiyat"));
+                 
+            } catch (SQLException | NumberFormatException e) {
+                System.err.println("iadede ikinci catche girdi : " +e);
+            }
+            System.out.println("FIYATIMIZ : " +fiyat);
+            tfiyat -= fiyat;
+            ofiyat -= fiyat;
+            System.out.println("son fiyatlar : " + tfiyat + " " + ofiyat);
+
+            String txtfiyat = String.valueOf(tfiyat);
+            String txtofiyat = String.valueOf(ofiyat);
+
+            boolean sonuc = db.genelQuery("update satis set toplamFiyat = '" + txtfiyat + "',odenenFiyat='" + txtofiyat + "' where satisID = '" + txtFatura.getText().trim() + "' ");
+            if (sonuc) {
+                System.out.println("sonuc sıfırdan büyük : " + sonuc);
+            }
+
+            db.kapat();
+
+        } catch (SQLException | NumberFormatException e) {
+            System.err.println("iade hatası : " + e);
+        }
+
+    }
+    
+    public void stok() {
+        try {
+            DB db = new DB();
+            ResultSet rs = db.dataGetir("urunler where barkodNo = '" + txtBarkod.getText() + "'");
+
+            int stok = rs.getInt("stok");
+            stok++;
+            boolean sonuc = db.genelQuery("update urunler set stok = '" + stok + "' where barkodNo = '" + txtBarkod.getText() + "' ");
+            if (sonuc) {
+                System.out.println("sonuc sıfırdan büyük : " + sonuc);
+            }
+            db.kapat();
+        } catch (Exception e) {
+            System.out.println("stok hatası : " +e);
+        }
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
